@@ -21,7 +21,8 @@ class Merchant < ApplicationRecord
     .where('invoices.updated_at <= ?', end_date)
     .where(id: merchant_id)
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
+  end
 
-    # sequel ("SELECT sum(invoice_items.quantity * invoice_items.unit_price) as rev FROM "merchants" INNER JOIN "items" ON "items"."merchant_id" = "merchants"."id" INNER JOIN "invoice_items" ON "invoice_items"."item_id" = "items"."id" INNER JOIN "invoices" ON "invoices"."id" = "invoice_items"."invoice_id" INNER JOIN "transactions" ON "transactions"."invoice_id" = "invoices"."id" WHERE (transactions.result = 'success') AND (invoices.status = 'shipped') AND (invoices.updated_at > '2012-03-01') AND (invoices.updated_at < '2012-03-26') AND "merchants"."id" = 1;")
+  def self.merchants_by_items_sold
   end
 end
