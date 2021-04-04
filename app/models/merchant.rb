@@ -23,6 +23,18 @@ class Merchant < ApplicationRecord
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
+  def self.revenue_by_top_month(merchant_id, limit = 1000000)
+    joins(:transactions)
+    .where('transactions.result = ?', 'success')
+    .where('invoices.status = ?', 'shipped')
+    .where(id: merchant_id)
+    .select("DATE_TRUNC('year', invoices.updated_at) AS year, DATE_TRUNC('month', invoices.updated_at) AS month, sum(invoice_items.quantity * invoice_items.unit_price) as rev")
+    .group('year', 'month')
+    .order('rev desc')
+    .limit(limit)
+    .pluck("DATE_TRUNC('year', invoices.updated_at) AS year", "DATE_TRUNC('month', invoices.updated_at) AS month", 'sum(invoice_items.quantity * invoice_items.unit_price) as rev')
+  end
+
   def self.merchants_by_items_sold
   end
 end
