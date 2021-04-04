@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 2021_04_02_104110) do
   create_table "invoices", force: :cascade do |t|
     t.string "status"
     t.bigint "customer_id"
-    t.bigint "merchants_id"
+    t.bigint "merchant_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["customer_id"], name: "index_invoices_on_customer_id"
-    t.index ["merchants_id"], name: "index_invoices_on_merchants_id"
+    t.index ["merchant_id"], name: "index_invoices_on_merchant_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -60,19 +60,19 @@ ActiveRecord::Schema.define(version: 2021_04_02_104110) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.bigint "invoices_id"
+    t.bigint "invoice_id"
     t.integer "credit_card_number"
     t.date "credit_card_expiration_date"
     t.string "result"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["invoices_id"], name: "index_transactions_on_invoices_id"
+    t.index ["invoice_id"], name: "index_transactions_on_invoice_id"
   end
 
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoice_items", "items"
   add_foreign_key "invoices", "customers"
-  add_foreign_key "invoices", "merchants", column: "merchants_id"
+  add_foreign_key "invoices", "merchants"
   add_foreign_key "items", "merchants"
-  add_foreign_key "transactions", "invoices", column: "invoices_id"
+  add_foreign_key "transactions", "invoices"
 end
