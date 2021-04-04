@@ -13,6 +13,14 @@ class Merchant < ApplicationRecord
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
+  def self.total_revenue_of_unshipped_items
+    joins(:transactions)
+    .where('transactions.result = ?', 'success')
+    .where('invoices.status = ?', 'packaged')
+    .group(:id)
+    .pluck('merchants.id, sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
+  end
+
   def self.top_merchants_by_total_revenue(limit)
     joins(:transactions)
     .where('transactions.result = ?', 'success')
@@ -40,8 +48,5 @@ class Merchant < ApplicationRecord
     .group('year', 'month')
     .order('year', 'month')
     .pluck("DATE_TRUNC('year', invoices.updated_at) AS year", "DATE_TRUNC('month', invoices.updated_at) AS month", 'sum(invoice_items.quantity * invoice_items.unit_price) as rev')
-  end
-
-  def self.merchants_by_items_sold
   end
 end

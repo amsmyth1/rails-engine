@@ -23,6 +23,22 @@ RSpec.describe Merchant, type: :model do
         expect(Merchant.total_revenue(@merchant_7.id)).to eq(answer)
       end
     end
+    describe "#total_revenue_of_unshipped_items" do
+      it "returns the total revenue for a merchant" do
+        @merchant_7 = create(:merchant, name: 'Merchant 7')
+        customer = create(:customer)
+        item_1 = @merchant_7.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 10.5)
+        item_2 = @merchant_7.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 20.5)
+        invoice_1 = Invoice.create!(customer_id: customer.id, status: "packaged", merchant_id: @merchant_7.id)
+        invoice_2 = Invoice.create!(customer_id: customer.id, status: "shipped", merchant_id: @merchant_7.id)
+        InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 3.5)
+        InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 1, unit_price: 1.5)
+        Transaction.create!(invoice_id: invoice_1.id, result: "success")
+        Transaction.create!(invoice_id: invoice_2.id, result: "success")
+
+        expect(Merchant.total_revenue_of_unshipped_items).to eq([@merchant_7.id, BigDecimal.new(7)])
+      end
+    end
 
     describe "#top_merchants_by_total_revenue(limit)" do
       it "returns the top merchants based on total_revenue" do
