@@ -14,13 +14,10 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     render json: Item.create(item_params)
-    # Item.new!({
-    #   name: params[:item][:name],
-    #   description: params[:item][:description],
-    #   price: params[:item][:price],
-    #   merchant_id: params[:item][:merchant_id],
-    #   })
-    #   binding.pry
+  end
+
+  def update
+    render json: Item.update(params[:id], item_params)
   end
 
   private
