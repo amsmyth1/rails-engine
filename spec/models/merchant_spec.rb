@@ -3,6 +3,10 @@ require 'rails_helper'
 RSpec.describe Merchant, type: :model do
   describe "validations" do
     it { should have_many :items }
+    it { should have_many(:invoice_items).through(:items) }
+    it { should have_many(:invoices).through(:invoice_items) }
+    it { should have_many(:transactions).through(:invoices) }
+    it { should have_many(:customers).through(:invoices) }
   end
 
   describe "class methods" do
@@ -120,6 +124,21 @@ RSpec.describe Merchant, type: :model do
 
         expect(Merchant.revenue_by_month.first[2]).to eq(BigDecimal.new(7))
         expect(Merchant.revenue_by_month[1][2]).to eq(BigDecimal.new(6))
+      end
+    end
+
+    describe ".paginate" do
+      it "takes arguments for page and per_page to display results" do
+        answer = Merchant.paginate(page: 3, per_page: 2)
+
+        merchant_1 = create(:merchant)
+        merchant_2 = create(:merchant)
+        merchant_3 = create(:merchant)
+        merchant_4 = create(:merchant)
+        merchant_5 = create(:merchant)
+        merchant_6 = create(:merchant)
+
+        expect(answer).to eq([merchant_5, merchant_6])
       end
     end
   end

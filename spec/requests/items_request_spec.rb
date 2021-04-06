@@ -7,24 +7,24 @@ RSpec.describe "Items API" do
     get '/api/v1/items'
     expect(response).to be_successful
 
-    items = JSON.parse(response.body, symbolize_names:true)
+    items = JSON.parse(response.body, symbolize_names:true)[:data]
     expect(items.count).to eq(3)
 
     items.each do |item|
       expect(item).to have_key(:id)
-      expect(item[:id]).to be_an(Integer)
+      # expect(item[:id]).to be_an(Integer)
 
-      expect(item).to have_key(:name)
-      expect(item[:name]).to be_a(String)
+      expect(item[:attributes]).to have_key(:name)
+      expect(item[:attributes][:name]).to be_a(String)
 
-      expect(item).to have_key(:description)
-      expect(item[:description]).to be_a(String)
+      expect(item[:attributes]).to have_key(:description)
+      expect(item[:attributes][:description]).to be_a(String)
 
-      expect(item).to have_key(:merchant_id)
-      expect(item[:merchant_id]).to be_a(Integer)
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to be_a(Integer)
 
-      expect(item).to have_key(:unit_price)
-      expect(item[:unit_price]).to be_a(String)
+      expect(item[:attributes]).to have_key(:unit_price)
+      expect(item[:attributes][:unit_price]).to be_a(String)
     end
   end
 
@@ -32,21 +32,62 @@ RSpec.describe "Items API" do
     id = create(:item).id
 
     get '/api/v1/items'
-    item = JSON.parse(response.body, symbolize_names:true)[0]
+    item = JSON.parse(response.body, symbolize_names:true)[:data][0]
 
     expect(item).to have_key(:id)
-    expect(item[:id]).to be_an(Integer)
+    # expect(item[:id]).to be_an(Integer)
 
-    expect(item).to have_key(:name)
-    expect(item[:name]).to be_a(String)
+    expect(item[:attributes]).to have_key(:name)
+    expect(item[:attributes][:name]).to be_a(String)
 
-    expect(item).to have_key(:description)
-    expect(item[:description]).to be_a(String)
+    expect(item[:attributes]).to have_key(:description)
+    expect(item[:attributes][:description]).to be_a(String)
 
-    expect(item).to have_key(:merchant_id)
-    expect(item[:merchant_id]).to be_a(Integer)
+    expect(item[:attributes]).to have_key(:merchant_id)
+    expect(item[:attributes][:merchant_id]).to be_a(Integer)
 
-    expect(item).to have_key(:unit_price)
-    expect(item[:unit_price]).to be_a(String)
+    expect(item[:attributes]).to have_key(:unit_price)
+    expect(item[:attributes][:unit_price]).to be_a(String)
+  end
+
+  it "can create then delete an item" do
+    merchant = create(:merchant)
+    item_params = ({
+      name: "Shiny Itemy Item",
+      description: "It does a lot of things real good.",
+      unit_price: 123.45,
+      merchant_id: merchant.id
+      })
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+    created_item = Item.last
+
+    expect(response).to be_successful
+    expect(created_item.name).to eq(item_params[:name])
+    expect(created_item.description).to eq(item_params[:description])
+    expect(created_item.unit_price).to eq(item_params[:unit_price])
+    expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+
+    delete "/api/v1/items/#{created_item.id}"
+
+    expect(response).to be_successful
+    expect(Item.count).to eq(0)
+    expect{Item.find((created_item).id)}.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  it "can update an item" do
+    id = create(:item).id
+
+    previous_name = Item.last.name
+    item_params = { name: "Test This Update!" }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+    item = Item.find_by(id: id)
+
+    expect(response).to be_successful
+    expect(item.name).to eq("Test This Update!")
   end
 end
