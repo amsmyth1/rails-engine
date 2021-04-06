@@ -20,7 +20,7 @@ RSpec.describe "Merchant Items API" do
     expect(response).to be_successful
 
     items = JSON.parse(response.body, symbolize_names:true)[:data]
-    expect(items.count).to eq(6)
+    expect(items.count).to eq(5)
 
     items.each do |item|
       expect(item).to have_key(:id)
