@@ -19,6 +19,13 @@ class Merchant < ApplicationRecord
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
+  def total_revenue
+    transactions
+    .where('transactions.result = ?', 'success')
+    .where('invoices.status = ?', 'shipped')
+    .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
+  end
+
   def self.total_revenue_of_unshipped_items
     joins(:transactions)
     .where('transactions.result = ?', 'success')
