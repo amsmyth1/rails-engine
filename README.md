@@ -31,9 +31,9 @@ Things you may want to cover:
 2. Items
   - [x] Get all items
   - [x] Get one item
-  - [ ] Create (then delete) one item
-  - [ ] Update one item
-  - [ ] Get an item's merchant
+  - [x] Create (then delete) one item
+  - [x] Update one item
+  - [x] Get an item's merchant
 #### Rails Engine Part2
   - [ ] Find All Merchants by Name Fragment
   - [ ] Find One Item by Name Fragment
