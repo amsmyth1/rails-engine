@@ -20,8 +20,8 @@ RSpec.describe "Items API" do
       expect(item[:attributes]).to have_key(:description)
       expect(item[:attributes][:description]).to be_a(String)
 
-      expect(item[:relationships][:merchant][:data]).to have_key(:id)
-      # expect(item[:relationships][:merchant][:data][:id]).to be_a(Integer)
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to be_a(Integer)
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_a(String)
@@ -43,8 +43,8 @@ RSpec.describe "Items API" do
     expect(item[:attributes]).to have_key(:description)
     expect(item[:attributes][:description]).to be_a(String)
 
-    expect(item[:relationships][:merchant][:data]).to have_key(:id)
-    # expect(item[:relationships][:merchant][:data][:id]).to be_a(Integer)
+    expect(item[:attributes]).to have_key(:merchant_id)
+    expect(item[:attributes][:merchant_id]).to be_a(Integer)
 
     expect(item[:attributes]).to have_key(:unit_price)
     expect(item[:attributes][:unit_price]).to be_a(String)
