@@ -1,7 +1,6 @@
 # README
+This is an e-commerce API plug in to be utilized to expose merchants, items, and business inteligence queries.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
 Things you may want to cover:
 
@@ -22,3 +21,25 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+## Test suite
+#### Railes Engine Part1
+1. Merchants
+  - [x] Get all merchants
+  - [x] Get one merchant
+  - [x] Get one merchant's items
+2. Items
+  - [x] Get all items
+  - [x] Get one item
+  - [ ] Create (then delete) one item
+  - [ ] Update one item
+  - [ ] Get an item's merchant
+#### Rails Engine Part2
+  - [ ] Find All Merchants by Name Fragment
+  - [ ] Find One Item by Name Fragment
+  - [ ] Find One Item by Prices
+#### Rails Engine Part3
+  - [ ] Get Merchants with Most Revenue
+  - [ ] Get Revenue between Date Range
+  - [ ] Get Revenue of a Single Merchant
+  - [ ] Potential Revenue of Unshipped Orders
