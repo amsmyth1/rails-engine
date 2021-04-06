@@ -10,7 +10,7 @@ RSpec.describe "Item's Merchant API" do
     get "/api/v1/items/#{item_1.id}/merchant"
     expect(response).to be_successful
 
-    merchant = JSON.parse(response.body, symbolize_names:true)[:data]
-    expect(merchant[:data][:attributes]).to eq(merchant.name)
+    merchant_data = JSON.parse(response.body, symbolize_names:true)
+    expect(merchant_data[:data][:attributes][:name]).to eq(merchant.name)
   end
 end
