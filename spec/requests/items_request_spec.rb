@@ -72,8 +72,8 @@ RSpec.describe "Items API" do
   end
 
   it "can update an item" do
-    id = create(:merchant).id
-    create(:item)
+    id = create(:item).id
+
     previous_name = Item.last.name
     item_params = { name: "Test This Update!" }
     headers = {"CONTENT_TYPE" => "application/json"}
