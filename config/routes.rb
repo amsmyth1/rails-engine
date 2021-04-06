@@ -11,5 +11,5 @@ Rails.application.routes.draw do
     end
   end
 
-  # get '/api/v1/merchants/:merchant_id/items', to: 'api::v1::merchants::items:#index'
+  get '/api/v1/revenue/merchants/:merchant_id', to: 'merchants#revenue'
 end
