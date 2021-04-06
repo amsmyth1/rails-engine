@@ -74,7 +74,7 @@ RSpec.describe "Items API" do
 
     expect(response).to be_successful
     expect(Item.count).to eq(0)
-    expect{Item.find((item).id)}.to raise_error(ActiveRecord::RecordNotFound)
+    expect{Item.find((created_item).id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it "can update an item" do

@@ -1,4 +1,5 @@
 class Api::V1::ItemsController < ApplicationController
+  include ActionController::Helpers
 
   def index
     if params[:page] == "0"
@@ -13,13 +14,16 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    render json: Item.create(item_params)
+    render json: ItemSerializer.new(Item.create(item_params)), status: 201
   end
 
   def update
-    render json: Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(Item.update(params[:id], item_params))
   end
 
+  def destroy
+    render json: Item.delete(params[:id])
+  end
   private
 
   def item_params
