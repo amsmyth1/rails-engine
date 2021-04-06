@@ -12,6 +12,5 @@ RSpec.describe "Item's Merchant API" do
 
     merchant = JSON.parse(response.body, symbolize_names:true)[:data]
     expect(merchant[:data][:attributes]).to eq(merchant.name)
-
   end
 end
