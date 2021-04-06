@@ -69,6 +69,12 @@ RSpec.describe "Items API" do
     expect(created_item.description).to eq(item_params[:description])
     expect(created_item.unit_price).to eq(item_params[:unit_price])
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+
+    delete "/api/v1/items/#{created_item.id}"
+
+    expect(response).to be_successful
+    expect(Item.count).to eq(0)
+    expect{Item.find((item).id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it "can update an item" do
@@ -78,7 +84,7 @@ RSpec.describe "Items API" do
     item_params = { name: "Test This Update!" }
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+    put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
     item = Item.find_by(id: id)
 
     expect(response).to be_successful
