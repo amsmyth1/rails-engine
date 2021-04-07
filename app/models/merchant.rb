@@ -34,12 +34,6 @@ class Merchant < ApplicationRecord
     .group('invoices.id')
     .order('rev desc')
   end
-  # def self.total_revenue_of_unshipped_items
-  #   joins(:transactions)
-  #   .where('transactions.result = ?', 'success')
-  #   .where('invoices.status = ?', 'packaged')
-  #   .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
-  # end
 
   def self.top_merchants_by_total_revenue(limit)
     joins(:transactions)
