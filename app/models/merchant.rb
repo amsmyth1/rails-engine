@@ -39,7 +39,7 @@ class Merchant < ApplicationRecord
     .where('transactions.result = ?', 'success')
     .where('invoices.status = ?', 'shipped')
     .group(:id)
-    .select('merchants.name, sum(invoice_items.quantity * invoice_items.unit_price) as rev')
+    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as rev')
     .order('rev desc')
     .limit(limit)
   end

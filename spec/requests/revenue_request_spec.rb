@@ -61,8 +61,11 @@ RSpec.describe "Revene Request" do
       expect(response).to be_successful
 
       revenue = JSON.parse(response.body, symbolize_names:true)
-      expect(revenue[:data][:attributes][:revenue]).to eq("5.0")
-      expect(revenue[:data]).to have_key(:attributes)
+
+      expect(revenue[:data].class).to eq(Array)
+      expect(revenue[:data].first.class).to eq(Hash)
+      expect(revenue[:data].first[:attributes]).to have_key(:revenue)
+      expect(revenue[:data].first[:attributes]).to have_key(:name)
     end
   end
 end
