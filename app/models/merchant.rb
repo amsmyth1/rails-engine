@@ -11,6 +11,10 @@ class Merchant < ApplicationRecord
     limit(per_page).offset((page - 1) * per_page)
   }
 
+  def self.find_one(query)
+    where('lower(name) LIKE ?', "%#{query.downcase}%").limit(1)
+  end
+
   def self.total_revenue(merchant_id)
     joins(:transactions)
     .where('transactions.result = ?', 'success')
