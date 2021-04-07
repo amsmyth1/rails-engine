@@ -136,11 +136,14 @@ RSpec.describe "Revene Request" do
       Transaction.create!(invoice_id: invoice_16.id, result: "success")
       Transaction.create!(invoice_id: invoice_26.id, result: "success")
 
-      get "/api/v1/revenue?start=2012-03-09&end=2012-03-24"
+      get "/api/v1/revenue?start=2021-01-01&end=2021-01-24"
       expect(response).to be_successful
 
-      date_revenue = JSON.parse(response.body, symbolize_names:true)
-      expect(date_revenue[:date]).to eq(50)
+      date_revenue = JSON.parse(response.body, symbolize_names:true)[:data]
+      expect(date_revenue[:id]).to eq(nil)
+      expect(date_revenue[:type]).to eq("revenue")
+      expect(date_revenue[:attributes].count).to eq(1)
+      expect(date_revenue[:attributes][:revenue]).to eq("40.0")
     end
   end
 end
