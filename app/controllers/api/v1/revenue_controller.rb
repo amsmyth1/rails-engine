@@ -5,6 +5,6 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def top_merchants
-    binding.pry
+    render json: TopMerchantsRevenueSerializer.new(Merchant.find(params[:merchant_id]))
   end
 end
