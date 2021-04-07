@@ -74,7 +74,7 @@ RSpec.describe "Revene Request" do
       customer6 = create(:customer)
       item_16 = @merchant_6.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 1.5)
       invoice_16 = Invoice.create!(customer_id: customer6.id, status: "shipped", merchant_id: @merchant_6.id)
-      invoice_26 = Invoice.create!(customer_id: customer6.id, status: "unshipped", merchant_id: @merchant_6.id)
+      invoice_26 = Invoice.create!(customer_id: customer6.id, status: "packaged", merchant_id: @merchant_6.id)
       InvoiceItem.create!(invoice_id: invoice_16.id, item_id: item_16.id, quantity: 1, unit_price: 3.5)
       InvoiceItem.create!(invoice_id: invoice_26.id, item_id: item_16.id, quantity: 1, unit_price: 1.5)
       Transaction.create!(invoice_id: invoice_16.id, result: "success")
@@ -84,7 +84,7 @@ RSpec.describe "Revene Request" do
       customer = create(:customer)
       item_1 = @merchant_7.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 1.5)
       invoice_1 = Invoice.create!(customer_id: customer.id, status: "shipped", merchant_id: @merchant_7.id)
-      invoice_2 = Invoice.create!(customer_id: customer.id, status: "unshipped", merchant_id: @merchant_7.id)
+      invoice_2 = Invoice.create!(customer_id: customer.id, status: "packaged", merchant_id: @merchant_7.id)
       InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 1, unit_price: 5.5)
       InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_1.id, quantity: 1, unit_price: 1.5)
       Transaction.create!(invoice_id: invoice_1.id, result: "success")
@@ -107,7 +107,7 @@ RSpec.describe "Revene Request" do
 
       unshipped_revenue = JSON.parse(response.body, symbolize_names:true)
 
-      expect(unshipped_revenue[:data].class).to eq(1)
+      expect(unshipped_revenue).to eq(1)
     end
   end
 end

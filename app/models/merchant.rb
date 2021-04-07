@@ -26,12 +26,18 @@ class Merchant < ApplicationRecord
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
-  def self.total_revenue_of_unshipped_items
+  def self.total_revenue_of_unshipped_items_by_merchant
     joins(:transactions)
     .where('transactions.result = ?', 'success')
     .where('invoices.status = ?', 'packaged')
     .group(:id)
-    .pluck('merchants.id, sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
+    .select('merchants.*, sum(invoice_items.quantity * invoice_items.unit_price) as rev')
+  end
+  def self.total_revenue_of_unshipped_items
+    joins(:transactions)
+    .where('transactions.result = ?', 'success')
+    .where('invoices.status = ?', 'packaged')
+    .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
   def self.top_merchants_by_total_revenue(limit)
