@@ -93,5 +93,16 @@ RSpec.describe "merchants API" do
         expect(merchant[:attributes][:name]).to be_a(String)
       end
     end
+    it "If a user tries to fetch a page for which there is no data, then data should report an empty array" do
+      create_list(:merchant, 30)
+
+      get '/api/v1/merchants?page=8000000'
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names:true)[:data]
+
+      expect(merchants.count).to eq(0)
+      expect(merchants).to eq([])
+    end
   end
 end
