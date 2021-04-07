@@ -32,5 +32,17 @@ RSpec.describe Item, type: :model do
       expect(Item.search("tHe")).to eq([item_1, item_2, item_3, item_6])
       expect(Item.search("THE")).to eq([item_1, item_2, item_3, item_6])
     end
+    it "returns an empty array if no items match the fragment" do
+      item_1 = create(:item, name: "THE")
+      item_2 = create(:item, name: "there")
+      item_3 = create(:item, name: "either")
+      item_4 = create(:item, name: "wtihe")
+      item_5 = create(:item, name: "we")
+      item_6 = create(:item, name: "AtHe")
+
+      expect(Item.search("water")).to eq([])
+      expect(Item.search("waTer")).to eq([])
+      expect(Item.search("WATER")).to eq([])
+    end
   end
 end

@@ -151,7 +151,17 @@ RSpec.describe Merchant, type: :model do
         merchant_5 = create(:merchant, name: "Billie")
         merchant_6 = create(:merchant, name: "Wilma")
 
-        expect(Merchant.find_one("ill")).to eq([merchant_1])
+        expect(Merchant.find_one("ill")).to eq(merchant_1)
+      end
+      it "returns and empty array if no matches" do
+        merchant_1 = create(:merchant, name: "William")
+        merchant_2 = create(:merchant, name: "will")
+        merchant_3 = create(:merchant, name: "Bill")
+        merchant_4 = create(:merchant, name: "billy")
+        merchant_5 = create(:merchant, name: "Billie")
+        merchant_6 = create(:merchant, name: "Wilma")
+
+        expect(Merchant.find_one("Madonna")).to eq([])
       end
     end
   end

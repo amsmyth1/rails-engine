@@ -12,7 +12,12 @@ class Merchant < ApplicationRecord
   }
 
   def self.find_one(query)
-    where('lower(name) LIKE ?', "%#{query.downcase}%").limit(1)
+    answer = where('lower(name) LIKE ?', "%#{query.downcase}%").limit(1)[0]
+    if answer == nil
+      answer = []
+    else
+      answer
+    end
   end
 
   def self.total_revenue(merchant_id)

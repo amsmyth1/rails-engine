@@ -16,7 +16,7 @@ RSpec.describe "Search Request" do
       merchant = JSON.parse(response.body, symbolize_names:true)
 
       expect(merchant[:data][:attributes]).to have_key(:name)
-      expect(merchant[:data][:attributes][:name]).to have_key(merchant_1.name)
+      expect(merchant[:data][:attributes][:name]).to eq(merchant_1.name)
     end
   end
 
@@ -34,9 +34,22 @@ RSpec.describe "Search Request" do
 
       items = JSON.parse(response.body, symbolize_names:true)
 
-      expect(items).to eq([item_1, item_2, item_3, item_6])
-      expect(Item.search("tHe")).to eq([item_1, item_2, item_3, item_6])
-      expect(Item.search("THE")).to eq([item_1, item_2, item_3, item_6])
+      expect(items[:data].count).to eq(4)
+    end
+    it "should return an empty array when no items match a query" do
+      item_1 = create(:item, name: "THE")
+      item_2 = create(:item, name: "there")
+      item_3 = create(:item, name: "either")
+      item_4 = create(:item, name: "wtihe")
+      item_5 = create(:item, name: "we")
+      item_6 = create(:item, name: "AtHe")
+
+      get "/api/v1/items/find_all?name=WaTEr"
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items[:data]).to eq([])
     end
   end
 end
