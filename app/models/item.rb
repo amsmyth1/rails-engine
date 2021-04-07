@@ -12,6 +12,38 @@ class Item < ApplicationRecord
   }
 
   def self.search(query)
-    where('lower(name) LIKE ?', "%#{query.downcase}%")
+    result = where('lower(name) LIKE ?', "%#{query.downcase}%")
+    if result == nil
+      []
+    else
+      result
+    end
+  end
+
+  def self.search_min_price(min_price)
+    result = where('unit_price >= ?', min_price)
+    new_result = clean(result)
+    new_result
+  end
+
+  def self.search_max_price(max_price)
+    result = where('unit_price <= ?', max_price)
+    new_result = clean(result)
+    new_result
+  end
+
+  def self.search_price_range(min_price, max_price)
+    new_max_price = max_price + 1
+    result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price)
+    new_result = clean(result)
+    new_result
+  end
+
+  def self.clean(result)
+    if result == nil
+      []
+    else
+      result
+    end
   end
 end
