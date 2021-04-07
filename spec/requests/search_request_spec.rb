@@ -10,7 +10,7 @@ RSpec.describe "Search Request" do
       item_5 = create(:item, name: "we")
       item_6 = create(:item, name: "AtHe")
 
-      get "/api/vi/items/find_all?name=tHe"
+      get "/api/v1/items/find_all?name=tHe"
       expect(response).to be_successful
 
       items = JSON.parse(response.body, symbolize_names:true)
@@ -30,13 +30,13 @@ RSpec.describe "Search Request" do
       merchant_5 = create(:merchant, name: "Billie")
       merchant_6 = create(:merchant, name: "Wilma")
 
-      get "/api/vi/merchants/find?name=iLl"
+      get "/api/v1/merchants/find?name=iLl"
       expect(response).to be_successful
 
       merchant = JSON.parse(response.body, symbolize_names:true)
 
       expect(merchant[:data][:attributes]).to have_key(:name)
-      expect(merchant[:data][:attributes[:name]).to have_key(merchant_1.name)
+      expect(merchant[:data][:attributes][:name]).to have_key(merchant_1.name)
     end
   end
 end
