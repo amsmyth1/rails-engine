@@ -11,4 +11,9 @@ class Api::V1::RevenueController < ApplicationController
   def unshipped
     render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
   end
+
+  def revenue_by_date
+    binding.pry
+    render json: RevenueSerializer.new(Transaction.total_revenue_by_date(start_date, end_date))
+  end
 end

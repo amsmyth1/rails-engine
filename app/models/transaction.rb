@@ -9,8 +9,7 @@ class Transaction < ApplicationRecord
     .where('transactions.result = ?', 'success')
     .where('invoices.status = ?', 'shipped')
     .where('invoices.updated_at >= ?', start_date)
-    .where('invoices.updated_at <= ?', end_date)
-    .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
-binding.pry
+    .where('invoices.updated_at <= ?', (end_date + 1))
+    .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')
   end
 end

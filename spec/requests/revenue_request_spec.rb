@@ -112,4 +112,35 @@ RSpec.describe "Revene Request" do
       expect(unshipped_revenue[:data].first[:id].to_i).to eq(invoice_2.id)
     end
   end
+
+  describe ".revenue_by_date" do
+    it "returans the total revenue in the system for a date range" do
+      @merchant_7 = create(:merchant, name: 'Merchant 7')
+      customer = create(:customer)
+      item_1 = @merchant_7.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 5)
+      item_2 = @merchant_7.items.create!(name: 'Item 2', description: 'foo bar baz quux', unit_price: 5)
+      invoice_1 = Invoice.create!(customer_id: customer.id, status: "shipped", merchant_id: @merchant_7.id, updated_at: Date.new(2021, 1, 25))
+      invoice_2 = Invoice.create!(customer_id: customer.id, status: "shipped", merchant_id: @merchant_7.id, updated_at: Date.new(2021, 1, 2))
+      InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 2, unit_price: 5)
+      InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_2.id, quantity: 2, unit_price: 5)
+      Transaction.create!(invoice_id: invoice_1.id, result: "success")
+      Transaction.create!(invoice_id: invoice_2.id, result: "success")
+
+      @merchant_6 = create(:merchant, name: 'Merchant 6')
+      customer6 = create(:customer)
+      item_16 = @merchant_6.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 2)
+      invoice_16 = Invoice.create!(customer_id: customer6.id, status: "shipped", merchant_id: @merchant_6.id, updated_at: Date.new(2021, 1, 20))
+      invoice_26 = Invoice.create!(customer_id: customer6.id, status: "shipped", merchant_id: @merchant_6.id, updated_at: Date.new(2021, 2, 20))
+      InvoiceItem.create!(invoice_id: invoice_16.id, item_id: item_16.id, quantity: 10, unit_price: 2)
+      InvoiceItem.create!(invoice_id: invoice_26.id, item_id: item_16.id, quantity: 10, unit_price: 2)
+      Transaction.create!(invoice_id: invoice_16.id, result: "success")
+      Transaction.create!(invoice_id: invoice_26.id, result: "success")
+
+      get "/api/v1/revenue?start=2012-03-09&end=2012-03-24"
+      expect(response).to be_successful
+
+      date_revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(date_revenue[:date]).to eq(50)
+    end
+  end
 end
