@@ -18,4 +18,17 @@ RSpec.describe Item, type: :model do
       expect(answer).to eq([item_5, item_6])
     end
   end
+
+  describe ".search" do
+    it "returns items that names match the search frament" do
+      item_1 = create(:item, name: "the")
+      item_2 = create(:item, name: "there")
+      item_3 = create(:item, name: "either")
+      item_4 = create(:item, name: "wtihe")
+      item_5 = create(:item, name: "we")
+      item_6 = create(:item, name: "athe")
+
+      expect(Item.search("the")).to eq([item_1, item_2, item_3, item_6])
+    end
+  end
 end
