@@ -42,4 +42,4 @@ Things you may want to cover:
   - [x] Get Merchants with Most Revenue
   - [ ] Get Revenue between Date Range
   - [x] Get Revenue of a Single Merchant
-  - [ ] Potential Revenue of Unshipped Orders
+  - [x] Potential Revenue of Unshipped Orders
