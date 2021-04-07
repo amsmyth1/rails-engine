@@ -10,4 +10,8 @@ class Item < ApplicationRecord
     per_page = (per_page || 20).to_i
     limit(per_page).offset((page - 1) * per_page)
   }
+
+  def self.search(query)
+    where('lower(name) LIKE ?', "%#{query.downcase}%")
+  end
 end
