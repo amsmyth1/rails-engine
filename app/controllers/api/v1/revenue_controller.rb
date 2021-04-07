@@ -9,6 +9,6 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def unshipped
-    render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items_by_merchant)
+    render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
   end
 end

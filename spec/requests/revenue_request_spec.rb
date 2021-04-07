@@ -86,7 +86,7 @@ RSpec.describe "Revene Request" do
       invoice_1 = Invoice.create!(customer_id: customer.id, status: "shipped", merchant_id: @merchant_7.id)
       invoice_2 = Invoice.create!(customer_id: customer.id, status: "packaged", merchant_id: @merchant_7.id)
       InvoiceItem.create!(invoice_id: invoice_1.id, item_id: item_1.id, quantity: 1, unit_price: 5.5)
-      InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_1.id, quantity: 1, unit_price: 1.5)
+      InvoiceItem.create!(invoice_id: invoice_2.id, item_id: item_1.id, quantity: 1, unit_price: 5.5)
       Transaction.create!(invoice_id: invoice_1.id, result: "success")
       Transaction.create!(invoice_id: invoice_2.id, result: "success")
 
@@ -107,7 +107,9 @@ RSpec.describe "Revene Request" do
 
       unshipped_revenue = JSON.parse(response.body, symbolize_names:true)
 
-      expect(unshipped_revenue).to eq(1)
+      expect(unshipped_revenue[:data].class).to eq(Array)
+      expect(unshipped_revenue[:data].count).to eq(2)
+      expect(unshipped_revenue[:data].first[:id].to_i).to eq(invoice_2.id)
     end
   end
 end

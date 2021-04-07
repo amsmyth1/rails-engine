@@ -40,7 +40,7 @@ RSpec.describe Merchant, type: :model do
         Transaction.create!(invoice_id: invoice_1.id, result: "success")
         Transaction.create!(invoice_id: invoice_2.id, result: "success")
 
-        expect(Merchant.total_revenue_of_unshipped_items).to eq([@merchant_7.id, BigDecimal.new(7)])
+        expect(Merchant.total_revenue_of_unshipped_items[0].class).to eq(Merchant)
       end
     end
 
