@@ -39,7 +39,7 @@ Things you may want to cover:
   - [ ] Find One Item by Name Fragment
   - [ ] Find One Item by Prices
 #### Rails Engine Part3
-  - [ ] Get Merchants with Most Revenue
+  - [x] Get Merchants with Most Revenue
   - [ ] Get Revenue between Date Range
-  - [ ] Get Revenue of a Single Merchant
-  - [ ] Potential Revenue of Unshipped Orders
+  - [x] Get Revenue of a Single Merchant
+  - [x] Potential Revenue of Unshipped Orders
