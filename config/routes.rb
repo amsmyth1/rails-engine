@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get '/api/v1/revenue/unshipped', to: 'api/v1/revenue#unshipped'
   get '/api/v1/revenue', to: 'api/v1/revenue#revenue_by_date'
   get '/api/v1/items/find_all', to: 'api/v1/searches#find_all_items'
+  get '/api/v1/items/find', to: 'api/v1/searches#find_one_item_by_price'
   get '/api/v1/merchants/find', to: 'api/v1/searches#find_one_merchant'
 
   namespace :api do

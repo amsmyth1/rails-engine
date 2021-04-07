@@ -58,22 +58,7 @@ RSpec.describe "merchants API" do
         expect(merchant[:attributes][:name]).to be_a(String)
       end
     end
-
-    it "can show one merchant" do
-      id = create(:merchant).id
-
-      get "/api/v1/merchants/#{id}"
-      merchant = JSON.parse(response.body, symbolize_names:true)[:data]
-
-      expect(response).to be_successful
-      expect(merchant).to have_key(:id)
-      # expect(merchant[:id]).to be_an(Integer)
-
-      expect(merchant[:attributes]).to have_key(:name)
-      expect(merchant[:attributes][:name]).to be_a(String)
-    end
   end
-
   describe "sad path" do
     it "sends page 1 of merchants if page is specified as 0" do
       create_list(:merchant, 30)
@@ -103,6 +88,30 @@ RSpec.describe "merchants API" do
 
       expect(merchants.count).to eq(0)
       expect(merchants).to eq([])
+    end
+  end
+  describe "show one merchant" do
+    it "happy path" do
+      id = create(:merchant).id
+
+      get "/api/v1/merchants/#{id}"
+      merchant = JSON.parse(response.body, symbolize_names:true)[:data]
+
+      expect(response).to be_successful
+      expect(merchant).to have_key(:id)
+      # expect(merchant[:id]).to be_an(Integer)
+
+      expect(merchant[:attributes]).to have_key(:name)
+      expect(merchant[:attributes][:name]).to be_a(String)
+    end
+    it "sad path" do
+      id = create(:merchant).id
+
+      get "/api/v1/merchants/#{id}"
+      merchant = JSON.parse(response.body, symbolize_names:true)[:data]
+
+      expect(response).to be_successful
+      expect(response.status).to eq(404)
     end
   end
 end

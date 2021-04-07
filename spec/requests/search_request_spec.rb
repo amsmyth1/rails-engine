@@ -52,4 +52,42 @@ RSpec.describe "Search Request" do
       expect(items[:data]).to eq([])
     end
   end
+  describe ".price" do
+    it "returns one item that have prices within the search" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?max_price=40"
+      expect(response).to be_successful
+      expect(response.status).to eq(200)
+      item = JSON.parse(response.body, symbolize_names:true)
+      binding.pry
+
+      expect(item.count).to eq(1)
+      expect(item[:data][:id]).to eq(item_4.id.to_s)
+      expect(item[:data][:attributes][:name]).to eq(item_4.name)
+    end
+    it "returns sucess but no data if min price is too big" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?min_price=400000"
+      expect(response).to be_successful
+      expect(response.status).to eq(200)
+      item = JSON.parse(response.body, symbolize_names:true)
+      binding.pry
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(Hash)
+      expect(item[:data].empty?).to eq(true)
+    end
+  end
 end
