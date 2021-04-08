@@ -25,14 +25,22 @@ class Api::V1::SearchesController < ApplicationController
         render json: ItemSerializer.new(item)
       end
     elsif params[:min_price] != nil
-      item = Item.search_one_min_price(params[:min_price].to_i)
-      if item.class == Item
-        render json: ItemSerializer.new(item)
+      if params[:min_price].to_i < 0
+        render json: {error: "minimum price must be greater than 0"}, status: 400
       else
-        render json: {data: {}}
+        item = Item.search_one_min_price(params[:min_price].to_i)
+        if item.class == Item
+          render json: ItemSerializer.new(item)
+        else
+          render json: {data: {}}
+        end
       end
     else params[:max_price] != nil
-      render json: ItemSerializer.new(Item.search_one_max_price(params[:max_price].to_i))
+      if params[:max_price].to_i < 0
+        render json: {error: "maximum price must be greater than 0"}, status: 400
+      else
+        render json: ItemSerializer.new(Item.search_one_max_price(params[:max_price].to_i))
+      end
     end
   end
 end

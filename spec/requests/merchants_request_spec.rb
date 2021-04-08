@@ -107,10 +107,11 @@ RSpec.describe "merchants API" do
     it "sad path" do
       id = create(:merchant).id
 
-      get "/api/v1/merchants/#{id}"
-      merchant = JSON.parse(response.body, symbolize_names:true)[:data]
+      get "/api/v1/merchants/8293457139485719"
+      merchant = JSON.parse(response.body, symbolize_names:true)
 
-      expect(response).to be_successful
+      expect(merchant[:data]).to eq(nil)
+      expect(merchant[:error]).to be_a(String)
       expect(response.status).to eq(404)
     end
   end

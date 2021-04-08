@@ -69,7 +69,7 @@ RSpec.describe "Search Request" do
     end
   end
   describe "Find one item by price" do
-    it "returns one item that have prices within the search" do
+    it "returns one item that have prices within the search, sorted alhpabetically" do
       item_1 = create(:item, unit_price: 10.0, name: "D")
       item_2 = create(:item, unit_price: 20.0, name: "C")
       item_3 = create(:item, unit_price: 30.0, name: "B")
@@ -104,6 +104,42 @@ RSpec.describe "Search Request" do
       expect(item.count).to eq(1)
       expect(item[:data]).to be_a(Hash)
       expect(item[:data].empty?).to eq(true)
+    end
+    it "returns 400 if min price is less than 0" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?min_price=-10"
+      # expect(response).to be_successful
+      expect(response.status).to eq(400)
+      item = JSON.parse(response.body, symbolize_names:true)
+
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
+    end
+    it "returns 400 if max price is less than 0" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?max_price=-10"
+      # expect(response).to be_successful
+      expect(response.status).to eq(400)
+      item = JSON.parse(response.body, symbolize_names:true)
+
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
     end
   end
 end
