@@ -146,4 +146,26 @@ RSpec.describe "Revene Request" do
       expect(date_revenue[:attributes][:revenue]).to eq("40.0")
     end
   end
+  describe "sad path" do
+    it "returns an error is quantity is left blank" do
+      get "/api/v1/revenue/merchants?quantity="
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error is quantity is left blank" do
+      get "/api/v1/revenue/merchants?quantity=asjf"
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+  end
+  describe "edge case" do
+    it "returns an error is quantity is left blank" do
+      get "/api/v1/revenue/merchants"
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+  end
 end

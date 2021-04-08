@@ -5,7 +5,13 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def top_merchants
-    render json: TopMerchantsRevenueSerializer.new(Merchant.top_merchants_by_total_revenue(params[:quantity]))
+    if params[:quantity].nil?
+      render json: {error: "please enter a quantity"}, status: 400
+    elsif params[:quantity].empty? || params[:quantity].to_i == 0
+      render json: {error: "please enter a quantity"}, status: 400
+    else
+      render json: TopMerchantsRevenueSerializer.new(Merchant.top_merchants_by_total_revenue(params[:quantity]))
+    end
   end
 
   def unshipped
