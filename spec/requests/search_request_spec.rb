@@ -142,7 +142,7 @@ RSpec.describe "Search Request" do
       expect(item[:error]).to be_a(String)
     end
   end
-  describe "edge cases" do
+  describe "#find_one_merchnat - edge cases" do
     it "returns an error when no name parameter passed" do
       get "/api/v1/merchants/find"
       expect(response.status).to eq(400)
@@ -162,6 +162,18 @@ RSpec.describe "Search Request" do
       expect(item.count).to eq(2)
       expect(item[:data]).to eq({})
       expect(item[:error]).to be_a(String)
+    end
+  end
+  describe "#find_all_items - edge cases" do
+    it "returns an error when no name parameter is passed " do
+      get "/api/v1/items/find_all"
+
+
+    end
+    it "returns an error when no nothing is passed to the name parameter" do
+      get "/api/v1/items/find_all?name="
+
+
     end
   end
 end
