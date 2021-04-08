@@ -96,7 +96,18 @@ RSpec.describe "Items API" do
       get "/api/v1/items/12564736473457"
 
       item = JSON.parse(response.body, symbolize_names:true)
-      
+
+      expect(response.status).to eq(404)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
+    end
+  end
+  describe "edge case" do
+    it "sends a 404 error when a bad id is entered" do
+      get "/api/v1/items/string"
+
+      item = JSON.parse(response.body, symbolize_names:true)
+
       expect(response.status).to eq(404)
       expect(item[:data]).to eq(nil)
       expect(item[:error]).to be_a(String)
