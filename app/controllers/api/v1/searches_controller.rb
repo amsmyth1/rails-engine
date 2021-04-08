@@ -1,11 +1,15 @@
 class Api::V1::SearchesController < ApplicationController
 
   def find_one_merchant
-    merchant = Merchant.find_one(params[:name])
-    if merchant.class == Array
-      render json: {error: "error", data: {}}, status: :bad_request
+    if params[:name].nil? || params[:name] == ""
+      render json: {error: "error", data: {}}, status: 400
     else
-      render json: MerchantSerializer.new(merchant)
+      merchant = Merchant.find_one(params[:name])
+      if merchant.class == Array
+        render json: {error: "error", data: {}}, status: :bad_request
+      else
+        render json: MerchantSerializer.new(merchant)
+      end
     end
   end
 
