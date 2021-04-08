@@ -18,6 +18,22 @@ RSpec.describe "Search Request" do
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to eq(merchant_1.name)
     end
+    it "return an empty hash when nothing matches" do
+      merchant_1 = create(:merchant, name: "William")
+      merchant_2 = create(:merchant, name: "will")
+      merchant_3 = create(:merchant, name: "Bill")
+      merchant_4 = create(:merchant, name: "billy")
+      merchant_5 = create(:merchant, name: "Billie")
+      merchant_6 = create(:merchant, name: "Wilma")
+
+      get "/api/v1/merchants/find?name=ABCd"
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data].count).to eq(0)
+    end
   end
 
   describe "#find_all_items" do
@@ -52,7 +68,7 @@ RSpec.describe "Search Request" do
       expect(items[:data]).to eq([])
     end
   end
-  describe ".price" do
+  describe "Find one item by price" do
     it "returns one item that have prices within the search" do
       item_1 = create(:item, unit_price: 10.0, name: "D")
       item_2 = create(:item, unit_price: 20.0, name: "C")
@@ -65,7 +81,7 @@ RSpec.describe "Search Request" do
       expect(response).to be_successful
       expect(response.status).to eq(200)
       item = JSON.parse(response.body, symbolize_names:true)
-      binding.pry
+
 
       expect(item.count).to eq(1)
       expect(item[:data][:id]).to eq(item_4.id.to_s)
@@ -83,10 +99,10 @@ RSpec.describe "Search Request" do
       expect(response).to be_successful
       expect(response.status).to eq(200)
       item = JSON.parse(response.body, symbolize_names:true)
-      binding.pry
+
 
       expect(item.count).to eq(1)
-      expect(item[:data]).to eq(Hash)
+      expect(item[:data]).to be_a(Hash)
       expect(item[:data].empty?).to eq(true)
     end
   end
