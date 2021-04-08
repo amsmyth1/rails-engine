@@ -160,6 +160,7 @@ RSpec.describe "Revene Request" do
       expect(revenue[:error]).to be_a(String)
     end
   end
+
   describe "edge case" do
     it "returns an error is quantity is left blank" do
       get "/api/v1/revenue/merchants"
@@ -182,7 +183,7 @@ RSpec.describe "Revene Request" do
       expect(revenue[:error]).to be_a(String)
     end
     it "returns an error when no end date is provided" do
-      get "api/v1/revenue?start=2012-03-01"
+      get "/api/v1/revenue?start=2012-03-01"
 
       expect(response.status).to eq(400)
       revenue = JSON.parse(response.body, symbolize_names:true)

@@ -19,8 +19,18 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def revenue_by_date
-    total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
-    render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})
+    if params[:start].nil? && params[:end].nil?
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:start] == "" && params[:end] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:start].nil? || params[:start] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:end].nil? || params[:end] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    else
+      total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
+      render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})
+    end
   end
 
   private
