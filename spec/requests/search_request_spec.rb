@@ -145,16 +145,22 @@ RSpec.describe "Search Request" do
   describe "edge cases" do
     it "returns an error when no name parameter passed" do
       get "/api/v1/merchants/find"
+      expect(response.status).to eq(400)
 
-      expect(item.count).to eq(1)
-      expect(item[:data]).to eq(nil)
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(2)
+      expect(item[:data]).to eq({})
       expect(item[:error]).to be_a(String)
     end
     it "returns an error when no nothing is passed to the name parameter" do
       get "/api/v1/merchants/find?name="
+      expect(response.status).to eq(400)
 
-      expect(item.count).to eq(1)
-      expect(item[:data]).to eq(nil)
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(2)
+      expect(item[:data]).to eq({})
       expect(item[:error]).to be_a(String)
     end
   end
