@@ -11,6 +11,15 @@ class Merchant < ApplicationRecord
     limit(per_page).offset((page - 1) * per_page)
   }
 
+  def self.find_one(query)
+    answer = where('lower(name) LIKE ?', "%#{query.downcase}%").limit(1)[0]
+    if answer == nil
+      answer = []
+    else
+      answer
+    end
+  end
+
   def self.total_revenue(merchant_id)
     joins(:transactions)
     .where('transactions.result = ?', 'success')
@@ -26,13 +35,14 @@ class Merchant < ApplicationRecord
     .pluck('sum(invoice_items.quantity * invoice_items.unit_price) as rev')[0]
   end
 
-  def self.total_revenue_of_unshipped_items
+  def self.total_revenue_of_unshipped_items(limit = 10)
     joins(:transactions)
     .where('transactions.result = ?', 'success')
     .where('invoices.status = ?', 'packaged')
     .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as rev')
     .group('invoices.id')
     .order('rev desc')
+    .limit(limit)
   end
 
   def self.top_merchants_by_total_revenue(limit)

@@ -10,19 +10,31 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    render json: ItemSerializer.new(Item.find(params[:id]))
+    if Item.where(id: params[:id]).count > 0
+      render json: ItemSerializer.new(Item.find(params[:id]))
+    else
+      render json: {error: "item does not exist with that id"}, status: 404
+    end
   end
 
   def create
-    render json: ItemSerializer.new(Item.create(item_params)), status: 201
+    render json: ItemSerializer.new(Item.create(item_params)), status: :created
   end
 
   def update
-    render json: ItemSerializer.new(Item.update(params[:id], item_params))
+    if Item.where(id: params[:id]).count > 0
+      render json: ItemSerializer.new(Item.update(params[:id], item_params))
+    else
+      render json: {error: "item does not exist with that id"}, status: 404
+    end
   end
 
   def destroy
-    render json: Item.delete(params[:id])
+    if Item.where(id: params[:id]).count > 0
+      render json: Item.delete(params[:id])
+    else
+      render json: {error: "item does not exist with that id"}, status: 404
+    end
   end
   private
 

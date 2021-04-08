@@ -1,14 +1,53 @@
 class Api::V1::RevenueController < ApplicationController
 
   def merchant_revenue
-    render json: RevenueSerializer.new(Merchant.find(params[:merchant_id]))
+    if Merchant.where(id: params[:merchant_id]).count > 0
+      render json: RevenueSerializer.new(Merchant.find(params[:merchant_id]))
+    else
+      render json: {error: "the merchant id is not valid"}, status: 404
+    end
   end
 
   def top_merchants
-    render json: TopMerchantsRevenueSerializer.new(Merchant.top_merchants_by_total_revenue(params[:quantity]))
+    if params[:quantity].nil?
+      render json: {error: "please enter a quantity"}, status: 400
+    elsif params[:quantity].empty? || params[:quantity].to_i == 0
+      render json: {error: "please enter a quantity"}, status: 400
+    else
+      render json: TopMerchantsRevenueSerializer.new(Merchant.top_merchants_by_total_revenue(params[:quantity]))
+    end
   end
 
   def unshipped
-    render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
+    # binding.pry
+    if params[:quantity].nil?
+      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
+    elsif params[:quantity] == "" || params[:quantity].to_i == 0
+      render json: {error: "please enter a quantity"}, status: 400
+    else
+      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items(params[:quantity].to_i))
+    end
+  end
+
+  def revenue_by_date
+    if params[:start].nil? && params[:end].nil?
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:start] == "" && params[:end] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:start].nil? || params[:start] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:end].nil? || params[:end] == ""
+      render json: {error: "please enter a start and end date"}, status: 400
+    else
+      total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
+      render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})
+    end
+  end
+
+  private
+
+  def clean_date(date)
+    new_date = date.split("-")
+    Date.new(new_date[0].to_i, new_date[1].to_i, new_date[2].to_i)
   end
 end
