@@ -1,7 +1,11 @@
 class Api::V1::RevenueController < ApplicationController
 
   def merchant_revenue
-    render json: RevenueSerializer.new(Merchant.find(params[:merchant_id]))
+    if Merchant.where(id: params[:merchant_id]).count > 0
+      render json: RevenueSerializer.new(Merchant.find(params[:merchant_id]))
+    else
+      render json: {error: "the merchant id is not valid"}, status: 404
+    end
   end
 
   def top_merchants
