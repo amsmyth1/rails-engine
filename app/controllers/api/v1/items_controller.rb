@@ -30,7 +30,11 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    render json: Item.delete(params[:id])
+    if Item.where(id: params[:id]).count > 0
+      render json: Item.delete(params[:id])
+    else
+      render json: {error: "item does not exist with that id"}, status: 404
+    end
   end
   private
 
