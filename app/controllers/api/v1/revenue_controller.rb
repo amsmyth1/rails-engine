@@ -19,7 +19,14 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def unshipped
-    render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
+    # binding.pry
+    if params[:quantity].nil?
+      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
+    elsif params[:quantity] == "" || params[:quantity].to_i == 0
+      render json: {error: "please enter a quantity"}, status: 400
+    else
+      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items(params[:quantity].to_i))
+    end
   end
 
   def revenue_by_date

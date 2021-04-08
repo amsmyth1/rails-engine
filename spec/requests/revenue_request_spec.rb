@@ -170,7 +170,7 @@ RSpec.describe "Revene Request" do
     end
     it "returns an error when a bad merchant id is given for total_revenue" do
       get "/api/v1/revenue/merchants/8923987297"
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(404)
       revenue = JSON.parse(response.body, symbolize_names:true)
       expect(revenue[:error]).to be_a(String)
     end
