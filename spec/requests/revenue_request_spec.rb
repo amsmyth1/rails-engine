@@ -167,5 +167,54 @@ RSpec.describe "Revene Request" do
       revenue = JSON.parse(response.body, symbolize_names:true)
       expect(revenue[:error]).to be_a(String)
     end
+    it "returns an error when no start or end dates are provided" do
+      get "/api/v1/revenue"
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when no start date is provided" do
+      get "/api/v1/revenue?end=2012-03-24"
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when no end date is provided" do
+      get "api/v1/revenue?start=2012-03-01"
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when start or end dates are blank" do
+      get "/api/v1/revenue?start=&end="
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when start date is provided but end date is blank" do
+      get "/api/v1/revenue?start=2012-03-01&end="
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when end date is provided but start date is blank" do
+      get "/api/v1/revenue?start=&end=2012-03-24"
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
+    it "returns an error when the end date is before the start date" do
+      get "/api/v1/revenue?start_date=2100-01-01&end_date=2000-01-01"
+
+      expect(response.status).to eq(400)
+      revenue = JSON.parse(response.body, symbolize_names:true)
+      expect(revenue[:error]).to be_a(String)
+    end
   end
 end
