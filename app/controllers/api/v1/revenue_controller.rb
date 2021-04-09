@@ -1,4 +1,5 @@
 class Api::V1::RevenueController < ApplicationController
+  include DateCheckable
 
   def merchant_revenue
     if Merchant.where(id: params[:merchant_id]).count > 0
@@ -30,26 +31,11 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def revenue_by_date
-    if params[:start].nil? && params[:end].nil?
-      render json: {error: "please enter a start and end date"}, status: 400
-    elsif params[:start] == "" && params[:end] == ""
-      render json: {error: "please enter a start and end date"}, status: 400
-    elsif params[:start].nil? || params[:start] == ""
-      render json: {error: "please enter a start and end date"}, status: 400
-    elsif params[:end].nil? || params[:end] == ""
-      render json: {error: "please enter a start and end date"}, status: 400
-    elsif params[:end] < params[:start]
-      render json: {error: "start date must be before end date"}, status: 400
+    if revenue_by_date_error?
+      render json: {error: "please enter correct start and end date"}, status: 400
     else
       total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
       render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})
     end
-  end
-
-  private
-
-  def clean_date(date)
-    new_date = date.split("-")
-    Date.new(new_date[0].to_i, new_date[1].to_i, new_date[2].to_i)
   end
 end
