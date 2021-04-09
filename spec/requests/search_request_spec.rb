@@ -114,15 +114,51 @@ RSpec.describe "Search Request" do
       item_5 = create(:item, unit_price: 50.0, name: "F")
       item_6 = create(:item, unit_price: 60.0, name: "E")
 
-      get "/api/v1/items/find?max_price=40"
+      get "/api/v1/items/find?min_price=10&max_price=40"
+
       expect(response).to be_successful
       expect(response.status).to eq(200)
       item = JSON.parse(response.body, symbolize_names:true)
 
-
       expect(item.count).to eq(1)
-      expect(item[:data][:id]).to eq(item_4.id.to_s)
-      expect(item[:data][:attributes][:name]).to eq(item_4.name)
+      expect(item[:data].first[:id]).to eq(item_4.id.to_s)
+      expect(item[:data].first[:attributes][:name]).to eq(item_4.name)
+    end
+    it "returns one item that have prices within the search, sorted alhpabetically when only min is given" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?min_price=10"
+
+      expect(response).to be_successful
+    end
+    it "returns one item that have prices within the search, sorted alhpabetically when only min is given" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?max_price=20"
+
+      expect(response).to be_successful
+    end
+    it "returns one item that have prices within the search, sorted alhpabetically" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "C")
+      item_3 = create(:item, unit_price: 30.0, name: "B")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "F")
+      item_6 = create(:item, unit_price: 60.0, name: "E")
+
+      get "/api/v1/items/find?min_price=10000&max_price=40000"
+
+      expect(response.status).to eq(400)
     end
     it "returns sucess but no data if min price is too big" do
       item_1 = create(:item, unit_price: 10.0, name: "D")
@@ -249,6 +285,17 @@ RSpec.describe "Search Request" do
     end
     it "returns an error when min price is over max price" do
       get "/api/v1/items/find?min_price=50&max_price=5"
+
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+    it "returns an error when name and price are passed" do
+      get "/api/v1/items/find?min_price=50&max_price=5&name=Har"
 
       expect(response.status).to eq(400)
 

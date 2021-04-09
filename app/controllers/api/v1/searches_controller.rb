@@ -40,8 +40,8 @@ class Api::V1::SearchesController < ApplicationController
     elsif params[:max_price] != nil && params[:min_price] != nil
       if params[:max_price].to_i > params[:min_price].to_i
         item = Item.search_one_price_range(params[:min_price].to_i, params[:max_price].to_i)
-        if item.nil?
-          render json: {error: "error"}
+        if item.nil? || item == []
+          render json: {error: "error"}, status: 400
         else
           render json: ItemSerializer.new(item)
         end
