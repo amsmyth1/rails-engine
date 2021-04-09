@@ -13,47 +13,27 @@ class Item < ApplicationRecord
 
   def self.search(query)
     result = where('lower(name) LIKE ?', "%#{query.downcase}%")
-    if result == nil
-      []
-    else
-      result
-    end
   end
 
   def self.search_min_price(min_price)
     result = where('unit_price >= ?', min_price).order(:name)
-    new_result = clean(result)
-    new_result
   end
   def self.search_one_min_price(min_price)
-    result = where('unit_price >= ?', min_price).order(:name).limit(1)
-    clean(result)[0]
+    result = where('unit_price >= ?', min_price).order(:name).limit(1)[0]
   end
 
   def self.search_max_price(max_price)
     result = where('unit_price <= ?', max_price).order(:name)
-    clean(result)
   end
 
   def self.search_one_max_price(max_price)
-    result = where('unit_price <= ?', max_price).order(:name).limit(1)
-    clean(result)[0]
+    result = where('unit_price <= ?', max_price).order(:name).limit(1)[0]
   end
 
   def self.search_price_range(min_price, max_price)
     result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price).order(:name)
-    clean(result)
   end
   def self.search_one_price_range(min_price, max_price)
     result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price).order(:name).limit(1)
-    clean(result)
-  end
-
-  def self.clean(result)
-    if result == nil
-      []
-    else
-      result
-    end
   end
 end
