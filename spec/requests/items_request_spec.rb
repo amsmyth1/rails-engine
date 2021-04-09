@@ -28,6 +28,32 @@ RSpec.describe "Items API" do
         expect(item[:attributes][:unit_price]).to be_a(String)
       end
     end
+    it "sends a list of page 1 items when page 0 is entered" do
+      create_list(:item, 3)
+
+      get '/api/v1/items?page=0'
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names:true)[:data]
+      expect(items.count).to eq(3)
+
+      items.each do |item|
+        expect(item).to have_key(:id)
+
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).to be_a(String)
+
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).to be_a(String)
+
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).to be_a(Integer)
+
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).to be_a(String)
+      end
+    end
+
     it "can show one item" do
       id = create(:item).id
 

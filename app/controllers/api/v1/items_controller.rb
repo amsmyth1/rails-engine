@@ -38,6 +38,7 @@ class Api::V1::ItemsController < ApplicationController
   def destroy
     if Item.where(id: params[:id]).count > 0
       render json: Item.delete(params[:id])
+      delete_invoices_with_item(params[:id])
     else
       render json: {error: "item does not exist with that id"}, status: 404
     end
@@ -46,5 +47,11 @@ class Api::V1::ItemsController < ApplicationController
 
   def item_params
     params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
+  end
+
+  private
+
+  def delete_invoices_with_item(item_id)
+    Invoice.delete_if_only_item(item_id)
   end
 end
