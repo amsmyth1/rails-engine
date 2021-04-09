@@ -73,6 +73,17 @@ RSpec.describe Item, type: :model do
       expect(Item.search_price_range(30, 50)).to eq([item_4, item_5, item_3])
       expect(Item.search_price_range(0, 100)).to eq([item_4, item_5, item_6, item_1, item_2, item_3])
     end
+    it "returns one item, alphabetically that have prices within the search" do
+      item_1 = create(:item, unit_price: 10.0, name: "D")
+      item_2 = create(:item, unit_price: 20.0, name: "E")
+      item_3 = create(:item, unit_price: 30.0, name: "F")
+      item_4 = create(:item, unit_price: 40.0, name: "A")
+      item_5 = create(:item, unit_price: 50.0, name: "B")
+      item_6 = create(:item, unit_price: 60.0, name: "C")
+
+      expect(Item.search_one_price_range(10, 40)).to eq([item_4])
+      expect(Item.search_one_max_price(40)).to eq(item_4)
+    end
 
     it "returns an empty array if no items match the search" do
       item_1 = create(:item, unit_price: 10.0)

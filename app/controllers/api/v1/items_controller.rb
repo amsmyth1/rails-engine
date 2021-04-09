@@ -23,7 +23,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     if Item.where(id: params[:id]).count > 0
-      if params[:merchant_id].nil?
+      if params[:merchant_id].nil? && params[:item][:merchant_id].nil?
         render json: ItemSerializer.new(Item.update(params[:id], item_params))
       elsif Merchant.where(id: params[:merchant_id]).count == 0
         render json: {error: "invalid merchant id"}, status: 404
