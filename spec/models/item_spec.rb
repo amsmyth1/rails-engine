@@ -44,16 +44,6 @@ RSpec.describe Item, type: :model do
       expect(Item.search("waTer")).to eq([])
       expect(Item.search("WATER")).to eq([])
     end
-    it "returns one item sorted alphabetically by name if the search matches" do
-      item_1 = create(:item, name: "THE")
-      item_2 = create(:item, name: "there")
-      item_3 = create(:item, name: "either")
-      item_4 = create(:item, name: "wtihe")
-      item_5 = create(:item, name: "we")
-      item_6 = create(:item, name: "AtHe")
-
-      expect(Item.search_one_by_name("ThE")).to eq(item_6)
-    end
   end
   describe ".price" do
     it "returns items that have prices within the search" do
