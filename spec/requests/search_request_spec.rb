@@ -36,6 +36,43 @@ RSpec.describe "Search Request" do
     end
   end
 
+  describe "#find_all_merchants_by_name" do
+    it "find all merchants which match a search term" do
+      merchant_1 = create(:merchant, name: "William")
+      merchant_2 = create(:merchant, name: "will")
+      merchant_3 = create(:merchant, name: "Bill")
+      merchant_4 = create(:merchant, name: "billy")
+      merchant_5 = create(:merchant, name: "Billie")
+      merchant_6 = create(:merchant, name: "Wilma")
+
+      get "/api/v1/merchants/find_all?name=iLl"
+
+      expect(response.status).to eq(200)
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchants[:data]).to be_a(Array)
+      expect(merchants[:data].count).to eq(5)
+    end
+    it "return an empty hash when nothing matches" do
+      merchant_1 = create(:merchant, name: "William")
+      merchant_2 = create(:merchant, name: "will")
+      merchant_3 = create(:merchant, name: "Bill")
+      merchant_4 = create(:merchant, name: "billy")
+      merchant_5 = create(:merchant, name: "Billie")
+      merchant_6 = create(:merchant, name: "Wilma")
+
+      get "/api/v1/merchants/find_all?name=NOMATCH"
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_an(Array)
+      expect(merchant[:data].count).to eq(0)
+    end
+  end
+
   describe "#find_all_items" do
     it "should return items that match a query name" do
       item_1 = create(:item, name: "THE")
@@ -140,6 +177,106 @@ RSpec.describe "Search Request" do
       expect(item.count).to eq(1)
       expect(item[:data]).to eq(nil)
       expect(item[:error]).to be_a(String)
+    end
+  end
+  describe "#find_one_merchnat - edge cases" do
+    it "returns an error when no name parameter passed" do
+      get "/api/v1/merchants/find"
+      expect(response.status).to eq(400)
+
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(2)
+      expect(item[:data]).to eq({})
+      expect(item[:error]).to be_a(String)
+    end
+    it "returns an error when no nothing is passed to the name parameter" do
+      get "/api/v1/merchants/find?name="
+      expect(response.status).to eq(400)
+
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(2)
+      expect(item[:data]).to eq({})
+      expect(item[:error]).to be_a(String)
+    end
+  end
+  describe "#find_all_items - edge cases" do
+    it "returns an error when no name parameter is passed " do
+      get "/api/v1/items/find_all"
+      expect(response.status).to eq(400)
+
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
+
+    end
+    it "returns an error when no nothing is passed to the name parameter" do
+      get "/api/v1/items/find_all?name="
+      expect(response.status).to eq(400)
+
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
+
+    end
+  end
+  describe "find_one_item_by_price - edge cases" do
+    it "returns an error when no mimumum price is passed to the min_price parameter" do
+      get "http://localhost:3000/api/v1/items/find?min_price="
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+    it "returns an error when no maxium price is passed to the max_price parameter" do
+      get "http://localhost:3000/api/v1/items/find?max_price="
+
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+    it "returns an error when min price is over max price" do
+      get "/api/v1/items/find?min_price=50&max_price=5"
+
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+  end
+  describe "#find_all_merchants_by_name - edge cases" do
+    it "returns an error when no paramter is sent to name" do
+      get "/api/v1/merchants/find_all?name="
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_an(Array)
+      expect(merchant[:data].count).to eq(0)
+    end
+    it "returns an error when no paramter is sent to name" do
+      get "/api/v1/merchants/find_all"
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_an(Array)
+      expect(merchant[:data].count).to eq(0)
     end
   end
 end

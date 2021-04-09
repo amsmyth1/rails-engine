@@ -38,6 +38,8 @@ class Api::V1::RevenueController < ApplicationController
       render json: {error: "please enter a start and end date"}, status: 400
     elsif params[:end].nil? || params[:end] == ""
       render json: {error: "please enter a start and end date"}, status: 400
+    elsif params[:end] < params[:start]
+      render json: {error: "start date must be before end date"}, status: 400
     else
       total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
       render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})

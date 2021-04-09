@@ -1,59 +1,14 @@
 # README
-This is an e-commerce API plug in to be utilized to expose merchants, items, and business inteligence queries.
-
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-## Test suite
-#### Railes Engine Part1
-1. Merchants
-  - [x] Get all merchants
-  - [x] Get one merchant
-  - [x] Get one merchant's items
-2. Items
-  - [x] Get all items
-  - [x] Get one item
-  - [x] Create (then delete) one item
-  - [x] Update one item
-  - [x] Get an item's merchant
-#### Rails Engine Part2
-  - [x] Find All Merchants by Name Fragment
-  - [x] Find One Item by Name Fragment
-  - [x] Find One Item by Prices
-#### Rails Engine Part3
-  - [x] Get Merchants with Most Revenue
-  - [x] Get Revenue between Date Range
-  - [x] Get Revenue of a Single Merchant
-  - [x] Potential Revenue of Unshipped Orders
----------------------
-# README
+This is an e-commerce API plug in to be utilized to expose merchants, items, and business intelligence queries.
 
   ## Authors
   - **Alexa Morales Smyth**
   | [GitHub](https://github.com/amsmyth1) |
   [LinkedIn](https://linkedin.com/alexamorales)
 
-# Merchant Sales Engine
+# Rails Engine
 
-  Merchant Sales Engine is an e-commerce API that exposes 15 paginated endpoints. Users can expose information on merchants, then details on said merchant. The API allows the user to have CRUD functionality over Items, which are owned by merchants. Features include search of merchants and items and business intelligence features.
+  Rails Engine is an e-commerce API that exposes 15 paginated endpoints. Users can expose information on merchants, then details on said merchant. The API allows the user to have CRUD functionality over Items, which are owned by merchants. Features include search of merchants and items and business intelligence features.
 
 ## Summary
 
@@ -106,7 +61,7 @@ RSpec testing suite is utilized for this application. Run the RSpec suit to ensu
 | GET | /api/v1/items/item_id/merchant | Show an item's merchant |
 | GET | /api/v1/merchants/find?name=<query> | Get one merchant that matches query |
 | GET | /api/v1/items/find_all?name=<query>| Find all items that match a name query |
-| GET | /api/v1/items/find?max_price=<num>&min_price=<num> | Find one item inbetween search parameter |
+| GET | /api/v1/items/find?max_price=<num>&min_price=<num> | Find one item in between search parameter |
 | GET | /api/v1/revenue/merchants?quantity=<num> | Find top <num> merchants by revenue |
 | GET | /api/v1/revenue?start=<start_date>&end=<end_date> | Revenue based on a date range |
 | GET | /api/v1/revenue/merchants/<merchant_id> | Revenue for a specific merchant |
