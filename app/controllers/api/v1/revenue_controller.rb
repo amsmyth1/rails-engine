@@ -20,7 +20,6 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def unshipped
-    # binding.pry
     if params[:quantity].nil?
       render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
     elsif params[:quantity] == "" || params[:quantity].to_i == 0
@@ -31,10 +30,10 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def revenue_by_date
-    if revenue_by_date_error?
+    if DateCheckable.revenue_by_date_error?(params[:start], params[:end])
       render json: {error: "please enter correct start and end date"}, status: 400
     else
-      total_revenue = Transaction.total_revenue_by_date(clean_date(params[:start]), clean_date(params[:end]))
+      total_revenue = Transaction.total_revenue_by_date(DateCheckable.clean_date(params[:start]), DateCheckable.clean_date(params[:end]))
       render json: DateRevenueSerializer.new(Transaction.new, {params: {rev: total_revenue}})
     end
   end
