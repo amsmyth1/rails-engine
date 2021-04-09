@@ -67,8 +67,13 @@ RSpec testing suite is utilized for this application. Run the RSpec suit to ensu
 | GET | /api/v1/revenue/merchants/<merchant_id> | Revenue for a specific merchant |
 | GET | /api/v1/revenue/unshipped?quantity=<num> | Top invoices with Potential revenue |
 
+#### Pagination
+- Pagination is available on all endpoints. To use, at the end of the path, add the following:
+  `?page=1per_page=10`
+The above sample of code will give you page 1 of the results and 10 results on the page. If a page is selected but there are no more results to display, and empty array will be returned.
+
 ### Organization of Application Code
-- The design pattern of Controller, Serializer, Model, was used for this application.
+- Model, Controller, Serializer design pattern is used for this application.
 - The business intelligence endpoints are all related to revenue, so the RevenueController handles these endpoints.
 - The Search Endpoints are handled by the SearchesController.
 
@@ -83,4 +88,4 @@ RSpec testing suite is utilized for this application. Run the RSpec suit to ensu
 - Postman edge cases are passing. For example, the search item by price. All edge cases are passing in postman and in RSpec test.
 
 ### Active Record Queries
-- Agile method applied. The AR queries were easier to complete while I grasped the concept of Controllers with json and Serializers. I had all BI and search queries completed by day 2. The remainder of the week was focused on understanding the API build, then connecting the Model methods to the controllers. Because Agile was applied, and I completed a lot of work when I could not complete the main portion of work, my project timeline was not affected and overall smooth. 
+- Agile method applied. The AR queries were easier to complete while I grasped the concept of Controllers with json and Serializers. I had all BI and search queries completed by day 2. The remainder of the week was focused on understanding the API build, then connecting the Model methods to the controllers. Because Agile was applied, and I completed a lot of work when I could not complete the main portion of work, my project timeline was not affected and overall smooth.
