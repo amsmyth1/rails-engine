@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/api/v1/items/find_all', to: 'api/v1/searches#find_all_items'
   get '/api/v1/items/find', to: 'api/v1/searches#find_one_item_by_price'
   get '/api/v1/merchants/find', to: 'api/v1/searches#find_one_merchant'
+  get '/api/v1/merchants/find_all', to: 'api/v1/searches#find_all_merchants_by_name'
 
   namespace :api do
     namespace :v1 do

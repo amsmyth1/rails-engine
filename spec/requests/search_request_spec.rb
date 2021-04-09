@@ -36,6 +36,45 @@ RSpec.describe "Search Request" do
     end
   end
 
+  describe "#find_all_merchants_by_name" do
+    it "find all merchants which match a search term" do
+      merchant_1 = create(:merchant, name: "William")
+      merchant_2 = create(:merchant, name: "will")
+      merchant_3 = create(:merchant, name: "Bill")
+      merchant_4 = create(:merchant, name: "billy")
+      merchant_5 = create(:merchant, name: "Billie")
+      merchant_6 = create(:merchant, name: "Wilma")
+
+      get "/api/v1/merchants/find_all?name=iLl"
+      
+      expect(response.status).to eq(200)
+      expect(response).to be_successful
+
+      merchants = JSON.parse(response.body, symbolize_names:true)
+      binding.pry
+
+      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data].count).to eq(0)
+    end
+
+    it "return an empty hash when nothing matches" do
+      merchant_1 = create(:merchant, name: "William")
+      merchant_2 = create(:merchant, name: "will")
+      merchant_3 = create(:merchant, name: "Bill")
+      merchant_4 = create(:merchant, name: "billy")
+      merchant_5 = create(:merchant, name: "Billie")
+      merchant_6 = create(:merchant, name: "Wilma")
+
+      get "/api/v1/merchants/find_all?name=ABCd"
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data].count).to eq(0)
+    end
+  end
+
   describe "#find_all_items" do
     it "should return items that match a query name" do
       item_1 = create(:item, name: "THE")
