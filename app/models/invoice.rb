@@ -6,9 +6,14 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :merchants, through: :items
 
-  def self.potential_revenue
+  def self.potential_revenue(limit)
     joins(:transactions)
-    .where('transactions.result = ?', 'success')
+    .joins(:invoice_items)
     .where('invoices.status = ?', 'packaged')
+    .where('transactions.result = ?', 'success')
+    .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as rev')
+    .group('invoices.id')
+    .order('rev desc')
+    .limit(limit)
   end
 end
