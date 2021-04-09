@@ -21,11 +21,11 @@ class Api::V1::RevenueController < ApplicationController
 
   def unshipped
     if params[:quantity].nil?
-      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items)
+      render json: UnshippedRevenueSerializer.new(Invoice.potential_revenue(10))
     elsif params[:quantity] == "" || params[:quantity].to_i == 0
       render json: {error: "please enter a quantity"}, status: 400
     else
-      render json: UnshippedRevenueSerializer.new(Merchant.total_revenue_of_unshipped_items(params[:quantity].to_i))
+      render json: UnshippedRevenueSerializer.new(Invoice.potential_revenue(params[:quantity].to_i))
     end
   end
 
