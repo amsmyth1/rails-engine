@@ -90,6 +90,19 @@ RSpec.describe "Items API" do
       expect(response).to be_successful
       expect(item.name).to eq("Test This Update!")
     end
+    it "can update an item with partial data" do
+      id = create(:item).id
+
+      previous_name = Item.last.name
+      item_params = {unit_price: 10.50}
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find_by(id: id)
+
+      expect(response).to be_successful
+      expect(item.name).to eq(previous_name)
+    end
   end
   describe "sad path" do
     it "sends a 404 error when a bad id is entered" do

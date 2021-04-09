@@ -14,11 +14,15 @@ class Api::V1::SearchesController < ApplicationController
   end
 
   def find_all_merchants_by_name
-    merchants = Merchant.find_by_name(params[:name])
-    if merchants.empty?
+    if params[:name].nil? || params[:name] == ""
       render json: {error: "error", data: []}, status: 400
     else
-      merchants = render json: MerchantSerializer.new(Merchant.find_by_name(params[:name]))
+      merchants = Merchant.find_by_name(params[:name])
+      if merchants.empty?
+        render json: {error: "error", data: []}, status: 400
+      else
+        merchants = render json: MerchantSerializer.new(Merchant.find_by_name(params[:name]))
+      end
     end
   end
 
@@ -31,17 +35,21 @@ class Api::V1::SearchesController < ApplicationController
   end
 
   def find_one_item_by_price
-    if params[:name] == nil && (params[:max_price] != nil || params[:min_price] != nil)
+    if params[:name] != nil && (params[:max_price] != nil || params[:min_price] != nil)
       render json: {error: "error"}, status: :bad_request
     elsif params[:max_price] != nil && params[:min_price] != nil
-      item = Item.search_one_price_range(params[:min_price].to_i, params[:max_price].to_i)
-      if item.nil?
-        render json: {error: "error"}
+      if params[:max_price].to_i > params[:min_price].to_i
+        item = Item.search_one_price_range(params[:min_price].to_i, params[:max_price].to_i)
+        if item.nil?
+          render json: {error: "error"}
+        else
+          render json: ItemSerializer.new(item)
+        end
       else
-        render json: ItemSerializer.new(item)
+        render json: {error: "minimum price must be greater than maximum price"}, status: 400
       end
     elsif params[:min_price] != nil
-      if params[:min_price].to_i < 0
+      if params[:min_price].to_i <= 0
         render json: {error: "minimum price must be greater than 0"}, status: 400
       else
         item = Item.search_one_min_price(params[:min_price].to_i)
@@ -52,7 +60,7 @@ class Api::V1::SearchesController < ApplicationController
         end
       end
     else params[:max_price] != nil
-      if params[:max_price].to_i < 0
+      if params[:max_price].to_i <= 0
         render json: {error: "maximum price must be greater than 0"}, status: 400
       else
         render json: ItemSerializer.new(Item.search_one_max_price(params[:max_price].to_i))

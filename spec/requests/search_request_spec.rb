@@ -68,7 +68,7 @@ RSpec.describe "Search Request" do
 
       merchant = JSON.parse(response.body, symbolize_names:true)
 
-      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data]).to be_an(Array)
       expect(merchant[:data].count).to eq(0)
     end
   end
@@ -266,7 +266,8 @@ RSpec.describe "Search Request" do
 
       merchant = JSON.parse(response.body, symbolize_names:true)
 
-      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data]).to be_an(Array)
+      expect(merchant[:data].count).to eq(0)
     end
     it "returns an error when no paramter is sent to name" do
       get "/api/v1/merchants/find_all"
@@ -274,7 +275,8 @@ RSpec.describe "Search Request" do
 
       merchant = JSON.parse(response.body, symbolize_names:true)
 
-      expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data]).to be_an(Array)
+      expect(merchant[:data].count).to eq(0)
     end
   end
 end
