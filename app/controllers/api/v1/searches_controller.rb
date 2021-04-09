@@ -1,4 +1,5 @@
 class Api::V1::SearchesController < ApplicationController
+  include Finable
 
   def find_one_merchant
     if params[:name].nil? || params[:name] == ""
