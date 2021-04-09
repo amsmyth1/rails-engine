@@ -23,7 +23,7 @@ class Api::V1::SearchesController < ApplicationController
   end
 
   def find_one_item_by_price
-    if params[:name] != nil && (params[:max_price] != nil || params[:min_price] != nil)
+    if params[:name] == nil && (params[:max_price] != nil || params[:min_price] != nil)
       render json: {error: "error"}, status: :bad_request
     elsif params[:max_price] != nil && params[:min_price] != nil
       item = Item.search_one_price_range(params[:min_price].to_i, params[:max_price].to_i)
