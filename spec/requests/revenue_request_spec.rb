@@ -217,7 +217,7 @@ RSpec.describe "Revene Request" do
       expect(revenue[:error]).to be_a(String)
     end
     it "returns an error when the end date is before the start date" do
-      get "/api/v1/revenue?start_date=2100-01-01&end_date=2000-01-01"
+      get "/api/v1/revenue?start=2100-01-01&end=2000-01-01"
 
       expect(response.status).to eq(400)
       revenue = JSON.parse(response.body, symbolize_names:true)
