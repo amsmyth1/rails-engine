@@ -19,7 +19,8 @@ class Merchant < ApplicationRecord
       answer
     end
   end
-  def self.find(query)
+
+  def self.find_by_name(query)
     where('lower(name) LIKE ?', "%#{query.downcase}%")
   end
 

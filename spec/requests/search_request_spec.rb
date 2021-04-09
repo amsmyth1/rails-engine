@@ -51,11 +51,10 @@ RSpec.describe "Search Request" do
       expect(response).to be_successful
 
       merchants = JSON.parse(response.body, symbolize_names:true)
-binding.pry
-      expect(merchants[:data]).to be_a(Hash)
-      expect(merchants[:data].count).to eq(0)
-    end
 
+      expect(merchants[:data]).to be_a(Array)
+      expect(merchants[:data].count).to eq(5)
+    end
     it "return an empty hash when nothing matches" do
       merchant_1 = create(:merchant, name: "William")
       merchant_2 = create(:merchant, name: "will")
@@ -64,7 +63,7 @@ binding.pry
       merchant_5 = create(:merchant, name: "Billie")
       merchant_6 = create(:merchant, name: "Wilma")
 
-      get "/api/v1/merchants/find_all?name=ABCd"
+      get "/api/v1/merchants/find_all?name=NOMATCH"
       expect(response.status).to eq(400)
 
       merchant = JSON.parse(response.body, symbolize_names:true)
@@ -258,6 +257,24 @@ binding.pry
       expect(items.count).to eq(1)
       expect(items[:data]).to eq(nil)
       expect(items[:error]).to be_a(String)
+    end
+  end
+  describe "#find_all_merchants_by_name - edge cases" do
+    it "returns an error when no paramter is sent to name" do
+      get "/api/v1/merchants/find_all?name="
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_a(Hash)
+    end
+    it "returns an error when no paramter is sent to name" do
+      get "/api/v1/merchants/find_all"
+      expect(response.status).to eq(400)
+
+      merchant = JSON.parse(response.body, symbolize_names:true)
+
+      expect(merchant[:data]).to be_a(Hash)
     end
   end
 end
