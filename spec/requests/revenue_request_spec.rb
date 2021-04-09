@@ -69,7 +69,7 @@ RSpec.describe "Revene Request" do
     end
   end
   describe "#unshipped" do
-    it "returns the top x merchants names and revenue by top revenue earners" do
+    it "returns the top potential revenue on x number of invoices" do
       @merchant_6 = create(:merchant, name: 'Merchant 6')
       customer6 = create(:customer)
       item_16 = @merchant_6.items.create!(name: 'Item 1', description: 'foo bar baz quux', unit_price: 1.5)
@@ -110,6 +110,15 @@ RSpec.describe "Revene Request" do
       expect(unshipped_revenue[:data].class).to eq(Array)
       expect(unshipped_revenue[:data].count).to eq(2)
       expect(unshipped_revenue[:data].first[:id].to_i).to eq(invoice_2.id)
+
+      get "/api/v1/revenue/unshipped?quantity=1"
+
+      expect(response).to be_successful
+
+      unshipped_revenue = JSON.parse(response.body, symbolize_names:true)
+
+      expect(unshipped_revenue[:data].class).to eq(Array)
+      expect(unshipped_revenue[:data][0].count).to eq(3)
     end
   end
 

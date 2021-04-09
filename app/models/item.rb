@@ -38,7 +38,7 @@ class Item < ApplicationRecord
   def self.search_price_range(min_price, max_price)
     result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price).order(:name)
   end
-  def self.search_one_price_range(min_price, max_price)
-    result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price).order(:name).limit(1)
-  end
+  # def self.search_one_price_range(min_price, max_price)
+  #   result = where('unit_price >= ?', min_price).where('unit_price <= ?', max_price).order(:name).limit(1)
+  # end
 end
