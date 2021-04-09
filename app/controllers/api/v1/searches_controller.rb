@@ -15,7 +15,11 @@ class Api::V1::SearchesController < ApplicationController
 
 
   def find_all_items
-    render json: ItemSerializer.new(Item.search(params[:name]))
+    if params[:name].nil? || params[:name] == ""
+      render json: {error: "error"}, status: 400
+    else
+      render json: ItemSerializer.new(Item.search(params[:name]))
+    end
   end
 
   def find_one_item_by_price

@@ -167,13 +167,59 @@ RSpec.describe "Search Request" do
   describe "#find_all_items - edge cases" do
     it "returns an error when no name parameter is passed " do
       get "/api/v1/items/find_all"
+      expect(response.status).to eq(400)
 
+      item = JSON.parse(response.body, symbolize_names:true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
 
     end
     it "returns an error when no nothing is passed to the name parameter" do
       get "/api/v1/items/find_all?name="
+      expect(response.status).to eq(400)
 
+      item = JSON.parse(response.body, symbolize_names:true)
 
+      expect(item.count).to eq(1)
+      expect(item[:data]).to eq(nil)
+      expect(item[:error]).to be_a(String)
+
+    end
+  end
+  describe "find_one_item_by_price - edge cases" do
+    it "returns an error when no mimumum price is passed to the min_price parameter" do
+      get "http://localhost:3000/api/v1/items/find?min_price="
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+    it "returns an error when no maxium price is passed to the max_price parameter" do
+      get "http://localhost:3000/api/v1/items/find?max_price="
+
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
+    end
+    it "returns an error when min price is over max price" do
+      get "/api/v1/items/find?min_price=50&max_price=5"
+
+      expect(response.status).to eq(400)
+
+      items = JSON.parse(response.body, symbolize_names:true)
+
+      expect(items.count).to eq(1)
+      expect(items[:data]).to eq(nil)
+      expect(items[:error]).to be_a(String)
     end
   end
 end
