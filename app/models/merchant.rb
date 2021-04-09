@@ -19,6 +19,9 @@ class Merchant < ApplicationRecord
       answer
     end
   end
+  def self.find(query)
+    where('lower(name) LIKE ?', "%#{query.downcase}%")
+  end
 
   def self.total_revenue(merchant_id)
     joins(:transactions)

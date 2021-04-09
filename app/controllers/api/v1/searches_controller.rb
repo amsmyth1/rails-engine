@@ -13,6 +13,14 @@ class Api::V1::SearchesController < ApplicationController
     end
   end
 
+  def find_all_merchants_by_name
+    merchants = Merchant.find(params[:name])
+    if merchants.empty?
+      render json: {error: "error", data: {}}, status: 400
+    else
+      merchants = render json: MerchantSerializer.new(Merchant.find(params[:name]))
+    end
+  end
 
   def find_all_items
     if params[:name].nil? || params[:name] == ""

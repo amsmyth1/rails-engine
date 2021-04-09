@@ -46,15 +46,14 @@ RSpec.describe "Search Request" do
       merchant_6 = create(:merchant, name: "Wilma")
 
       get "/api/v1/merchants/find_all?name=iLl"
-      
+
       expect(response.status).to eq(200)
       expect(response).to be_successful
 
       merchants = JSON.parse(response.body, symbolize_names:true)
-      binding.pry
-
-      expect(merchant[:data]).to be_a(Hash)
-      expect(merchant[:data].count).to eq(0)
+binding.pry
+      expect(merchants[:data]).to be_a(Hash)
+      expect(merchants[:data].count).to eq(0)
     end
 
     it "return an empty hash when nothing matches" do
