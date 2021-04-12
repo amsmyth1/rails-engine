@@ -66,3 +66,8 @@ RSpec testing suite is utilized for this application. Run the RSpec suit to ensu
 | GET | /api/v1/revenue?start=<start_date>&end=<end_date> | Revenue based on a date range |
 | GET | /api/v1/revenue/merchants/<merchant_id> | Revenue for a specific merchant |
 | GET | /api/v1/revenue/unshipped?quantity=<num> | Top invoices with Potential revenue |
+  
+ #### Pagination
+- Pagination is available on all endpoints. To use, at the end of the path, add the following:
+  `?page=1per_page=10`
+The above sample of code will give you page 1 of the results and 10 results on the page. If a page is selected but there are no more results to display, and empty array will be returned.
