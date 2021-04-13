@@ -40,8 +40,8 @@ RSpec testing suite is utilized for this application. Run the RSpec suit to ensu
 `bundle exec rspec`
 
 
-## Deployment
-*Coming soon*
+## Set Up
+https://www.loom.com/share/23b4155c92ee4de2b6bc4b35e58deb43
 
 ## Versioning
 
