@@ -18,5 +18,4 @@ jobs:
             gem install bundler
       - run:
           name: Run Tests
-          command: |
-            bundle exec rspec
+          command: run_tests
