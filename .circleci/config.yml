@@ -17,7 +17,7 @@ jobs:
             source $BASH_ENV
             gem install bundler
       - run:
-        name: Run Tests
-        command:
-          bundle install
-          bundle exec rspec
+          name: Run Tests
+          command:
+            bundle install
+            bundle exec rspec
